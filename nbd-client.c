@@ -550,6 +550,8 @@ void send_opt_exportname(int sock, uint16_t *flags, char* name, uint16_t global_
 	}
 }
 
+int stderrout(void *, const char *, va_list);
+
 void negotiate(int *sockp, uint16_t *flags, uint32_t needed_flags, uint32_t client_flags, uint32_t do_opts) {
 	u64 magic;
 	uint16_t tmp;
@@ -634,7 +636,7 @@ void negotiate(int *sockp, uint16_t *flags, uint32_t needed_flags, uint32_t clie
 				   0, // debug
 #endif
 				   NULL, // quitfn
-				   NULL, // erroutfn
+				   stderrout, // erroutfn
 				   NULL // opaque
 			);
 		if (!s)
@@ -656,11 +658,11 @@ void negotiate(int *sockp, uint16_t *flags, uint32_t needed_flags, uint32_t clie
 			err("Could not fork");
 		else if (ret == 0) {
 			// we are the child
-			if (daemon(0, 0) < 0) {
-				/* no one will see this */
-				fprintf(stderr, "Can't detach from the terminal");
-				exit(1);
-			}
+			//if (daemon(0, 0) < 0) {
+			//	/* no one will see this */
+			//	fprintf(stderr, "Can't detach from the terminal");
+			//	exit(1);
+			//}
 			signal (SIGPIPE, SIG_IGN);
 			close(plainfd[1]);
 			tlssession_mainloop(sock, plainfd[0], s);

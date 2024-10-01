@@ -80,7 +80,7 @@ quit (tlssession_t * s)
 }
 
 
-static int
+int
 stderrout (void *opaque, const char *format, va_list ap)
 {
   return vfprintf (stderr, format, ap);
